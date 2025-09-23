@@ -10,6 +10,9 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white54,
+      shadowColor: Colors.transparent,
+      elevation: 0,
       child: Column(
         children: [
           Padding(

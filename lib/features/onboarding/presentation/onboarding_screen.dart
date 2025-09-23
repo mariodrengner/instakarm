@@ -54,26 +54,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Color.fromRGBO(216, 142, 252, 1),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Instant Karma'),
+        foregroundColor: Colors.white,
+      ),
+      body: Stack(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
-            child: PageView.builder(
-              controller: _pageViewController,
-              itemCount: pages.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-                  child: pages[index],
-                );
-              },
-              onPageChanged: _handlePageViewChanged,
-            ),
+          Image.asset(
+            'assets/images/bg/onboarding.png',
+            width: double.infinity,
+            height: double.infinity,
           ),
-          PageIndicator(
-            tabController: _tabController,
-            currentPageIndex: _currentPageIndex,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: PageView.builder(
+                  controller: _pageViewController,
+                  itemCount: pages.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 8),
+                      child: pages[index],
+                    );
+                  },
+                  onPageChanged: _handlePageViewChanged,
+                ),
+              ),
+              PageIndicator(
+                tabController: _tabController,
+                currentPageIndex: _currentPageIndex,
+            ),
+          ],
           ),
         ],
       ),
