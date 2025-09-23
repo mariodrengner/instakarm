@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'widgets/onboarding_page.dart';
 import 'widgets/page_indicator.dart';
 
@@ -17,8 +16,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
   final List<Widget> pages = [
     OnboardingPage(
-      title: 'Willkommen',
-      text: 'Kurzer Intro-Text…',
+      title: 'Ganz locker und leicht',
+      image: 'assets/images/onboarding/1.png',
+      text: 'Ein Quest mit 7 einfachen Aufgaben pro Tag',
     ),
     OnboardingPage(
       title: 'Deine Gewohnheiten',
@@ -35,15 +35,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     setState(() {
       _currentPageIndex = currentPageIndex;
     });
-  }
-
-  void _updateCurrentPageIndex(int index) {
-    _tabController.index = index;
-    _pageViewController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
   }
 
   @override
@@ -83,7 +74,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           PageIndicator(
             tabController: _tabController,
             currentPageIndex: _currentPageIndex,
-            // onUpdateCurrentPageIndex: _updateCurrentPageIndex,
           ),
         ],
       ),

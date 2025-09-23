@@ -8,50 +8,56 @@ class StartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Instant Karma'),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          child: Center(
-            child: Column(
-              spacing: 16,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(flex: 4, child: Container()),
-                Expanded(flex: 2, child: Column(
-                  spacing: 8,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          Image.asset('assets/images/bg/start.png'),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              child: Center(
+                child: Column(
+                  spacing: 16,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Wir sind was wir tun', style: TextStyle(fontSize: 24)),
-                    const Text('Tausende Menschen verwenden Instant Karma auf ihrem Weg ein achtsameres Leben zu führen.', textAlign: TextAlign.center),
-                  ],
-                )),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => context.go('/onboarding'),
-                        child: const Text('Jetzt beginnen'),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Schon einen Account?'),
-                          TextButton(
-                            onPressed: null,
-                            child: const Text('Log In'),
-                          ),
-                        ],
-                      ),
+                    Expanded(flex: 3, child: Image.asset('assets/images/logo.png', width: 200, height: 200)),
+                    Expanded(flex: 2, child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 8,
+                      children: [
+                        const Text('Wir sind was wir tun', style: TextStyle(fontSize: 24)),
+                        const Text('Tausende Menschen verwenden Instant Karma auf ihrem Weg ein achtsameres Leben zu führen.', textAlign: TextAlign.center),
                     ],
+                  )),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => context.go('/onboarding'),
+                          child: const Text('Jetzt beginnen'),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Schon einen Account?'),
+                            TextButton(
+                              onPressed: null,
+                              child: const Text('Log In'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
+      ]),
     );
   }
 }
