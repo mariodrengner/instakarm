@@ -1,98 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          'Instant Karma',
-          style: textTheme.titleLarge?.copyWith(color: colorScheme.onPrimary),
-        ),
-      ),
-      body: Stack(
-        children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/bg/start.png',
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFD4FC79),
+              Color(0xFF96E6A1),
+            ],
+            stops: [0.0, 1.0],
+            transform: GradientRotation(135 * 3.1415926535 / 180),
           ),
-          // UI Content
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Image.asset('assets/images/logo.png', width: 200, height: 200),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Wir sind was wir tun',
-                            style: textTheme.headlineSmall?.copyWith(color: colorScheme.onPrimary),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Tausende Menschen verwenden Instant Karma auf ihrem Weg ein achtsameres Leben zu führen.',
-                            textAlign: TextAlign.center,
-                            style: textTheme.bodyLarge?.copyWith(color: colorScheme.onPrimary),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => context.go('/onboarding'),
-                              child: const Text('Jetzt beginnen'),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Schon einen Account?',
-                                  style: textTheme.bodyMedium?.copyWith(color: colorScheme.onPrimary),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // TODO: Implement Login
-                                  },
-                                  child: const Text('Log In'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // App-Logo
+              Image.asset(
+                'assets/images/logo.png',
+                width: 120,
+                height: 120,
+              ),
+              const SizedBox(height: 24),
+              // Titel
+              Text(
+                'InstaKarm',
+                style: GoogleFonts.rubik(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-            ),
+              const SizedBox(height: 8),
+              // Subheadline
+              Text(
+                'Level up your Mind',
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.white.withOpacity(0.9),
+                ),
+              ),
+              const Spacer(),
+              // CTA-Button
+              Padding(
+                padding: const EdgeInsets.only(bottom: 64.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.go('/onboarding');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color(0xFF96E6A1),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 48, vertical: 16),
+                    textStyle: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                  child: const Text('Los geht\'s'),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

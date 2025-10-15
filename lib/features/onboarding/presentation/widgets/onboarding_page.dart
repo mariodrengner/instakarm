@@ -20,8 +20,9 @@ class OnboardingPage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               title,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -37,7 +38,7 @@ class OnboardingPage extends StatelessWidget {
               child: Text(
                 text,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
                     ),
                 textAlign: TextAlign.center,
               ),
