@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:instakarm/app/app.dart';
+import 'package:instakarm/app_shell/app.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const App());
 }

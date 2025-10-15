@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'widgets/onboarding_page.dart';
 import 'widgets/page_indicator.dart';
 
@@ -53,19 +54,39 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
+    final bool isLastPage = _currentPageIndex == pages.length - 1;
+
     return Scaffold(
-      backgroundColor: Color.fromRGBO(216, 142, 252, 1),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Instant Karma'),
-        foregroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Instant Karma',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+        ),
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+        actions: [
+          if (!isLastPage)
+            TextButton(
+              onPressed: () {
+                _pageViewController.jumpToPage(pages.length - 1);
+              },
+              child: const Text('Überspringen'),
+            ),
+        ],
       ),
       body: Stack(
+        alignment: Alignment.center,
         children: [
           Image.asset(
             'assets/images/bg/onboarding.png',
             width: double.infinity,
             height: double.infinity,
+            fit: BoxFit.cover,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -87,9 +108,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               PageIndicator(
                 tabController: _tabController,
                 currentPageIndex: _currentPageIndex,
-            ),
-          ],
+              ),
+            ],
           ),
+          Positioned(
+            bottom: 40,
+            left: 24,
+            right: 24,
+            child: ElevatedButton(
+              onPressed: () {
+                if (isLastPage) {
+                  context.go('/home');
+                } else {
+                  _pageViewController.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: Text(isLastPage ? 'Los geht\'s' : 'Weiter'),
+            ),
+          )
         ],
       ),
     );

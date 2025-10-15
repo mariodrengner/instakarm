@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:instakarm/core/theme/app_theme.dart';
 
 class OnboardingPage extends StatelessWidget {
   final String title;
   final String text;
   final String image;
 
-  const OnboardingPage({super.key, required this.title, required this.text, this.image = ''});
+  const OnboardingPage(
+      {super.key, required this.title, required this.text, this.image = ''});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white54,
-      shadowColor: Colors.transparent,
-      elevation: 0,
+    return Container(
+      decoration: AppTheme.glassCardDecoration(context),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+              textAlign: TextAlign.center,
+            ),
           ),
           if (image != '')
             Padding(
@@ -26,7 +33,15 @@ class OnboardingPage extends StatelessWidget {
             ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Center(child: Text(text)),
+            child: Center(
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
         ],
       ),

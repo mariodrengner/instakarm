@@ -6,58 +6,94 @@ class StartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text('Instant Karma'),
+        elevation: 0,
+        title: Text(
+          'Instant Karma',
+          style: textTheme.titleLarge?.copyWith(color: colorScheme.onPrimary),
+        ),
       ),
-      extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          Image.asset('assets/images/bg/start.png'),
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bg/start.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // UI Content
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               child: Center(
                 child: Column(
-                  spacing: 16,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(flex: 3, child: Image.asset('assets/images/logo.png', width: 200, height: 200)),
-                    Expanded(flex: 2, child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 8,
-                      children: [
-                        const Text('Wir sind was wir tun', style: TextStyle(fontSize: 24)),
-                        const Text('Tausende Menschen verwenden Instant Karma auf ihrem Weg ein achtsameres Leben zu führen.', textAlign: TextAlign.center),
-                    ],
-                  )),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => context.go('/onboarding'),
-                          child: const Text('Jetzt beginnen'),
-                        ),
-                        Row(
+                    Expanded(
+                      flex: 3,
+                      child: Image.asset('assets/images/logo.png', width: 200, height: 200),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Wir sind was wir tun',
+                            style: textTheme.headlineSmall?.copyWith(color: colorScheme.onPrimary),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Tausende Menschen verwenden Instant Karma auf ihrem Weg ein achtsameres Leben zu führen.',
+                            textAlign: TextAlign.center,
+                            style: textTheme.bodyLarge?.copyWith(color: colorScheme.onPrimary),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Schon einen Account?'),
-                            TextButton(
-                              onPressed: null,
-                              child: const Text('Log In'),
+                            ElevatedButton(
+                              onPressed: () => context.go('/onboarding'),
+                              child: const Text('Jetzt beginnen'),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Schon einen Account?',
+                                  style: textTheme.bodyMedium?.copyWith(color: colorScheme.onPrimary),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // TODO: Implement Login
+                                  },
+                                  child: const Text('Log In'),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
