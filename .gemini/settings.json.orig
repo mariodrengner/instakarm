@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "dart": {
+      "command": "dart",
+      "args": [
+        "mcp-server"
+      ]
+    },
+    "context7": {
+          "command": "npx",
+          "args": ["-y", "@upstash/context7-mcp"]
+        }
+  },
+  "contextFileName": "/.prompts/llm.md"
+}

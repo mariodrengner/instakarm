@@ -1,0 +1,95 @@
+{
+  "categories": [
+    {
+      "name": "Balance",
+      "color": "#E53935",
+      "tasks": [
+        "5 Minuten barfuß draußen gehen",
+        "Ein Glas Wasser bewusst trinken",
+        "3 Dinge aufschreiben, für die du dankbar bist",
+        "1 Minute aufrecht stehen und ruhig atmen",
+        "5 Minuten spazieren gehen",
+        "Einen kleinen Bereich aufräumen",
+        "Kurz an die frische Luft gehen"
+      ]
+    },
+    {
+      "name": "Kreativität",
+      "color": "#FB8C00",
+      "tasks": [
+        "2 Minuten frei tanzen oder bewegen",
+        "Ein kleines Bild malen oder kritzeln",
+        "Ein neues Rezept ausprobieren",
+        "Eine Minute bewusst lachen oder lächeln",
+        "Jemandem ein lustiges Emoji oder GIF schicken",
+        "Ein Stück Obst langsam genießen",
+        "Eine spontane Idee notieren"
+      ]
+    },
+    {
+      "name": "Energie",
+      "color": "#FDD835",
+      "tasks": [
+        "10 Liegestütze oder 20 Jumping Jacks machen",
+        "Ein Glas Zitronenwasser trinken",
+        "Eine kleine Aufgabe sofort erledigen",
+        "Eine To-Do-Liste abhaken",
+        "1 Minute Powerpose einnehmen",
+        "Tiefe Atemübung: ein – halten – kräftig aus",
+        "„Ja“ zu etwas sagen, das dir guttut"
+      ]
+    },
+    {
+      "name": "Verbindung",
+      "color": "#43A047",
+      "tasks": [
+        "Jemandem ein ehrliches Kompliment geben",
+        "5 Minuten Herz-Meditation (Hände aufs Herz)",
+        "Einer Person wirklich zuhören",
+        "Dich selbst im Spiegel anlächeln",
+        "Eine kleine Freundlichkeit tun (z. B. Tür aufhalten)",
+        "Eine positive Nachricht verschicken",
+        "3 Mal tief ein- und ausatmen mit Fokus auf Herz"
+      ]
+    },
+    {
+      "name": "Ausdruck",
+      "color": "#1E88E5",
+      "tasks": [
+        "5 Minuten Tagebuch schreiben",
+        "Eine Idee laut aussprechen",
+        "Ein Lieblingslied mitsingen oder summen",
+        "Eine Affirmation laut wiederholen",
+        "Jemandem eine offene Frage stellen",
+        "„Danke“ bewusst laut sagen",
+        "Etwas Belastendes auf Papier schreiben und weglegen"
+      ]
+    },
+    {
+      "name": "Fokus",
+      "color": "#5E35B1",
+      "tasks": [
+        "2 Minuten Augen schließen und Gedanken beobachten",
+        "Einen Traum aufschreiben",
+        "Einen kurzen Spaziergang ohne Handy machen",
+        "Eine kleine Entscheidung aus dem Bauch heraus treffen",
+        "Eine Visualisierung: Ziel oder Wunsch vorstellen",
+        "5 Minuten stille Achtsamkeitsmeditation",
+        "Eine Situation aus zwei Blickwinkeln betrachten"
+      ]
+    },
+    {
+      "name": "Ruhe",
+      "color": "#8E24AA",
+      "tasks": [
+        "2 Minuten in Stille sitzen",
+        "Eine Minute in den Himmel schauen",
+        "Ein inspirierendes Zitat lesen",
+        "Eine Dankbarkeit innerlich senden",
+        "Kurz an die Natur oder das Größere denken",
+        "Einen tiefen Atemzug mit Fokus auf Weite nehmen",
+        "Meditationssatz wiederholen: „Ich bin verbunden“"
+      ]
+    }
+  ]
+}
