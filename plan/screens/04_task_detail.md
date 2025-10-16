@@ -8,6 +8,7 @@ Als Nutzer möchte ich Details zu einer Aufgabe sehen und sie abschließen könn
 
 ## 🧩 Tasks
 - Titel, Beschreibung, Kategorie-Tag
+- Passendes Bild
 - Fortschrittsstatus (z. B. „Täglich“, „Neu“)
 - Button: „Abschließen“
 - Animation: Fade + Confetti bei Abschluss
