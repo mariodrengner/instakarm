@@ -4,4 +4,5 @@ abstract class ITaskRepository {
   Future<List<DailyTaskLog>> getOrGenerateDailyTasks();
   Future<void> updateTaskCompletion(String taskId, bool isCompleted);
   Future<DailyTaskLog> generateNewTask(); // Example method for adding one new task
+  Future<void> clearTasks();
 }

@@ -1,17 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:instakarm/core/data/models/daily_task_log.dart';
 import 'package:instakarm/features/home/presentation/providers/home_provider.dart';
-import 'package:instakarm/features/onboarding/domain/repositories/user_profile_repository_provider.dart';
+import 'package:instakarm/features/onboarding/presentation/providers/onboarding_provider.dart';
+import 'package:instakarm/l10n/app_localizations.dart';
+import 'package:instakarm/shared/widgets/glass_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
+  String _getCategoryDisplayName(AppLocalizations l10n, String categoryKey) {
+    switch (categoryKey) {
+      case 'category_grounding':
+        return l10n.category_grounding;
+      case 'category_creativity':
+        return l10n.category_creativity;
+      case 'category_confidence':
+        return l10n.category_confidence;
+      case 'category_compassion':
+        return l10n.category_compassion;
+      case 'category_expression':
+        return l10n.category_expression;
+      case 'category_intuition':
+        return l10n.category_intuition;
+      case 'category_awareness':
+        return l10n.category_awareness;
+      default:
+        return categoryKey; // Fallback to key if not found
+    }
+  }
+
   void _showTaskDetails(BuildContext context, WidgetRef ref, DailyTaskLog task) {
+    final l10n = AppLocalizations.of(context)!;
+    // Temporarily display the key itself
+    final categoryDisplayName = _getCategoryDisplayName(l10n, task.categoryName);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: const Color(0xFFEDAFB8),
       builder: (context) => DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.4,
@@ -22,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
           child: ListView(
             controller: scrollController,
             children: [
-              Text(task.categoryName, style: Theme.of(context).textTheme.titleMedium),
+              Text(categoryDisplayName, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               Text(task.taskName, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 24),
@@ -31,6 +59,18 @@ class HomeScreen extends ConsumerWidget {
                   ref.read(homeProvider.notifier).completeTask(task.id);
                   Navigator.pop(context); // Close the modal
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black87,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  textStyle: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                ),
                 child: const Text('Als erledigt markieren'),
               )
             ],
@@ -43,8 +83,10 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeAsyncState = ref.watch(homeProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF7E1D7),
       body: homeAsyncState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Fehler: $err')),
@@ -55,23 +97,16 @@ class HomeScreen extends ConsumerWidget {
             slivers: [
               SliverAppBar(
                 title: Text('Hallo, ${state.userProfile.name}!'),
-                backgroundColor: Colors.transparent,
+                backgroundColor: const Color(0xFFF7E1D7),
                 elevation: 0,
-                foregroundColor: Theme.of(context).colorScheme.onSurface,
+                foregroundColor: Colors.black87,
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.refresh),
+                    icon: const Icon(Icons.refresh_rounded),
                     tooltip: 'Reset Onboarding',
-                    onPressed: () async {
-                      await ref.read(userProfileRepositoryProvider).clearProfile();
-                      if (context.mounted) {
-                        context.go('/');
-                      }
+                    onPressed: () {
+                      ref.read(onboardingViewModelProvider.notifier).resetOnboarding();
                     },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () {},
                   ),
                 ],
               ),
@@ -87,10 +122,19 @@ class HomeScreen extends ConsumerWidget {
                       );
                     }
                     final task = incompleteTasks[index];
-                    return ListTile(
-                      title: Text(task.taskName),
-                      subtitle: Text(task.categoryName),
-                      onTap: () => _showTaskDetails(context, ref, task),
+                    // Temporarily display the key itself
+                    final categoryDisplayName = _getCategoryDisplayName(l10n, task.categoryName);
+                    final color = _colorFromHex(task.categoryColorHex);
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      child: GlassCard(
+                        color: color,
+                        child: ListTile(
+                          title: Text(task.taskName),
+                          subtitle: Text(categoryDisplayName),
+                          onTap: () => _showTaskDetails(context, ref, task),
+                        ),
+                      ),
                     );
                   },
                   childCount: incompleteTasks.isEmpty ? 1 : incompleteTasks.length,
@@ -108,26 +152,37 @@ class HomeScreen extends ConsumerWidget {
               )
             : const SizedBox.shrink(),
         loading: () => const SizedBox.shrink(),
-        error: (_, __) => const SizedBox.shrink(),
+        error: (_, _) => const SizedBox.shrink(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: homeAsyncState.when(
-        data: (state) => _KarmaBottomBar(
+        data: (state) => KarmaBottomBar(
           karmaPoints: state.userProfile.karmaPoints,
           tasksToday: state.userProfile.tasksPerDay,
         ),
         loading: () => const SizedBox.shrink(),
-        error: (_, __) => const SizedBox.shrink(),
+        error: (_, _) => const SizedBox.shrink(),
       ),
     );
   }
 }
 
-class _KarmaBottomBar extends StatelessWidget {
+Color _colorFromHex(String hexColor) {
+  final hexCode = hexColor.replaceAll('#', '');
+  // Handle potential parsing errors with a fallback color
+  try {
+    // Use the hex code for full opacity
+    return Color(int.parse('FF$hexCode', radix: 16));
+  } catch (e) {
+    return Colors.transparent;
+  }
+}
+
+class KarmaBottomBar extends StatelessWidget {
   final int karmaPoints;
   final int tasksToday;
 
-  const _KarmaBottomBar({required this.karmaPoints, required this.tasksToday});
+  const KarmaBottomBar({super.key, required this.karmaPoints, required this.tasksToday});
 
   @override
   Widget build(BuildContext context) {

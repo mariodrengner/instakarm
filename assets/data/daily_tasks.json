@@ -1,8 +1,7 @@
 {
   "categories": [
     {
-      "name": "Balance",
-      "color": "#E53935",
+      "id": "grounding",
       "tasks": [
         "5 Minuten barfuß draußen gehen",
         "Ein Glas Wasser bewusst trinken",
@@ -14,8 +13,7 @@
       ]
     },
     {
-      "name": "Kreativität",
-      "color": "#FB8C00",
+      "id": "creativity",
       "tasks": [
         "2 Minuten frei tanzen oder bewegen",
         "Ein kleines Bild malen oder kritzeln",
@@ -27,8 +25,7 @@
       ]
     },
     {
-      "name": "Energie",
-      "color": "#FDD835",
+      "id": "confidence",
       "tasks": [
         "10 Liegestütze oder 20 Jumping Jacks machen",
         "Ein Glas Zitronenwasser trinken",
@@ -40,8 +37,7 @@
       ]
     },
     {
-      "name": "Verbindung",
-      "color": "#43A047",
+      "id": "compassion",
       "tasks": [
         "Jemandem ein ehrliches Kompliment geben",
         "5 Minuten Herz-Meditation (Hände aufs Herz)",
@@ -53,8 +49,7 @@
       ]
     },
     {
-      "name": "Ausdruck",
-      "color": "#1E88E5",
+      "id": "expression",
       "tasks": [
         "5 Minuten Tagebuch schreiben",
         "Eine Idee laut aussprechen",
@@ -66,8 +61,7 @@
       ]
     },
     {
-      "name": "Fokus",
-      "color": "#5E35B1",
+      "id": "intuition",
       "tasks": [
         "2 Minuten Augen schließen und Gedanken beobachten",
         "Einen Traum aufschreiben",
@@ -79,8 +73,7 @@
       ]
     },
     {
-      "name": "Ruhe",
-      "color": "#8E24AA",
+      "id": "awareness",
       "tasks": [
         "2 Minuten in Stille sitzen",
         "Eine Minute in den Himmel schauen",

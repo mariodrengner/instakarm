@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:instakarm/features/home/domain/models/category.dart';
 
 class Task {
   final String name;
@@ -11,16 +11,12 @@ class Task {
 }
 
 class TaskCategory {
-  final String name;
-  final Color color;
+  final Category category;
   final List<Task> tasks;
-  final int weeklyProgress; // Added for weekly progress tracking
 
   TaskCategory({
-    required this.name,
-    required this.color,
+    required this.category,
     required this.tasks,
-    this.weeklyProgress = 0, // Default value
   });
 
   factory TaskCategory.fromJson(Map<String, dynamic> json) {
@@ -28,37 +24,15 @@ class TaskCategory {
     List<Task> tasks = taskList.map((i) => Task.fromJson(i)).toList();
 
     return TaskCategory(
-      name: json['name'],
-      color: _colorFromHex(json['color']),
+      category: _categoryFromString(json['id']),
       tasks: tasks,
     );
   }
 
-  // Helper method to create a copy with updated progress
-  TaskCategory copyWith({int? weeklyProgress}) {
-    return TaskCategory(
-      name: this.name,
-      color: this.color,
-      tasks: this.tasks,
-      weeklyProgress: weeklyProgress ?? this.weeklyProgress,
+  static Category _categoryFromString(String id) {
+    return Category.values.firstWhere(
+      (e) => e.toString().split('.').last == id,
+      orElse: () => Category.grounding, // Fallback
     );
   }
-
-  static Color _colorFromHex(String hexColor) {
-    final hexCode = hexColor.replaceAll('#', '');
-    return Color(int.parse('FF$hexCode', radix: 16));
-  }
-}
-
-// New lightweight model for displaying a single daily task
-class DailyTaskDisplay {
-  final Task task;
-  final String categoryName;
-  final Color categoryColor;
-
-  DailyTaskDisplay({
-    required this.task,
-    required this.categoryName,
-    required this.categoryColor,
-  });
 }

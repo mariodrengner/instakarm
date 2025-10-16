@@ -8,23 +8,13 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFD4FC79),
-              Color(0xFF96E6A1),
-            ],
-            stops: [0.0, 1.0],
-            transform: GradientRotation(135 * 3.1415926535 / 180),
-          ),
-        ),
+      backgroundColor: const Color(0xFFF7E1D7),
+      body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 24),
               // App-Logo
               Image.asset(
                 'assets/images/logo.png',
@@ -38,7 +28,7 @@ class StartScreen extends StatelessWidget {
                 style: GoogleFonts.rubik(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 8),
@@ -48,7 +38,7 @@ class StartScreen extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w300,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.black.withAlpha(230),
                 ),
               ),
               const Spacer(),
@@ -61,9 +51,9 @@ class StartScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF96E6A1),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 48, vertical: 16),
+                    foregroundColor: const Color(0xFF000000),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
                     textStyle: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,

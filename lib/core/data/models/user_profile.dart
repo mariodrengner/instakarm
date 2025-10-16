@@ -18,10 +18,14 @@ class UserProfile {
   @HiveField(3)
   final int karmaPoints;
 
+  @HiveField(4)
+  final String difficulty;
+
   const UserProfile({
     required this.name,
     required this.tasksPerDay,
     required this.categoriesPerDay,
+    required this.difficulty,
     this.karmaPoints = 0,
   });
 
@@ -31,6 +35,7 @@ class UserProfile {
       name: 'Karmic Explorer',
       tasksPerDay: 3,
       categoriesPerDay: 3,
+      difficulty: 'medium', // Default difficulty
       karmaPoints: 0,
     );
   }
@@ -40,12 +45,14 @@ class UserProfile {
     int? tasksPerDay,
     int? categoriesPerDay,
     int? karmaPoints,
+    String? difficulty,
   }) {
     return UserProfile(
       name: name ?? this.name,
       tasksPerDay: tasksPerDay ?? this.tasksPerDay,
       categoriesPerDay: categoriesPerDay ?? this.categoriesPerDay,
       karmaPoints: karmaPoints ?? this.karmaPoints,
+      difficulty: difficulty ?? this.difficulty,
     );
   }
 }

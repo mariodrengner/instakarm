@@ -1,9 +1,28 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:instakarm/core/data/models/daily_task_log.dart';
 import 'package:instakarm/core/data/models/user_profile.dart';
 import 'package:instakarm/features/home/data/repositories/hive_task_repository.dart';
-import 'package:instakarm/features/onboarding/domain/repositories/user_profile_repository_provider.dart';
+import 'package:instakarm/features/home/domain/repositories/i_task_repository.dart';
+import 'package:instakarm/features/onboarding/data/repositories/hive_user_profile_repository.dart';
+import 'package:instakarm/features/onboarding/domain/repositories/i_user_profile_repository.dart';
+
+part 'home_provider.g.dart';
+
+// Provider for the User Profile Repository
+@Riverpod(keepAlive: true)
+Future<IUserProfileRepository> userProfileRepository(Ref ref) async {
+  final box = await Hive.openBox<UserProfile>('user_profile_box');
+  return HiveUserProfileRepository(box);
+}
+
+// Provider for the Task Repository
+@riverpod
+Future<ITaskRepository> taskRepository(Ref ref) async {
+  final userProfileRepository = await ref.watch(userProfileRepositoryProvider.future);
+  return HiveTaskRepository(userProfileRepository);
+}
 
 // 1. State Class
 @immutable
@@ -28,22 +47,29 @@ class HomeState {
 }
 
 // 2. Notifier Class
-class HomeNotifier extends AsyncNotifier<HomeState> {
+@Riverpod(keepAlive: true)
+class Home extends _$Home {
   @override
   Future<HomeState> build() async {
-    final userProfile = await ref.watch(userProfileRepositoryProvider).getProfile();
-    final tasks = await ref.watch(taskRepositoryProvider).getOrGenerateDailyTasks();
+    final userProfile = await (await ref.watch(userProfileRepositoryProvider.future)).getProfile();
+    final tasks = await (await ref.watch(taskRepositoryProvider.future)).getOrGenerateDailyTasks();
     return HomeState(userProfile: userProfile, tasks: tasks);
   }
 
   Future<void> completeTask(String taskId) async {
-    final taskRepo = ref.read(taskRepositoryProvider);
-    final profileRepo = ref.read(userProfileRepositoryProvider);
+    final taskRepo = await ref.read(taskRepositoryProvider.future);
+    final profileRepo = await ref.read(userProfileRepositoryProvider.future);
 
     // Update the state optimistically to feel faster
     final currentState = state.value;
     if (currentState != null) {
-      final updatedTasks = currentState.tasks.where((t) => t.id != taskId).toList();
+      final updatedTasks = currentState.tasks.map((t) {
+        if (t.id == taskId) {
+          return t.copyWith(isCompleted: true);
+        }
+        return t;
+      }).toList();
+
       final updatedProfile = currentState.userProfile.copyWith(
         karmaPoints: currentState.userProfile.karmaPoints + 1, // Assuming 1 point per task
       );
@@ -56,7 +82,7 @@ class HomeNotifier extends AsyncNotifier<HomeState> {
   }
 
   Future<void> addMoreTasks() async {
-    final taskRepo = ref.read(taskRepositoryProvider);
+    final taskRepo = await ref.read(taskRepositoryProvider.future);
     final newTask = await taskRepo.generateNewTask();
 
     final currentState = state.value;
@@ -65,8 +91,3 @@ class HomeNotifier extends AsyncNotifier<HomeState> {
     }
   }
 }
-
-// 3. Provider Declaration
-final homeProvider = AsyncNotifierProvider<HomeNotifier, HomeState>(() {
-  return HomeNotifier();
-});

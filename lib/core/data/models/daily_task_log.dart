@@ -32,4 +32,22 @@ class DailyTaskLog {
     required this.date,
     this.isCompleted = false,
   });
+
+  DailyTaskLog copyWith({
+    String? id,
+    String? taskName,
+    String? categoryName,
+    String? categoryColorHex,
+    DateTime? date,
+    bool? isCompleted,
+  }) {
+    return DailyTaskLog(
+      id: id ?? this.id,
+      taskName: taskName ?? this.taskName,
+      categoryName: categoryName ?? this.categoryName,
+      categoryColorHex: categoryColorHex ?? this.categoryColorHex,
+      date: date ?? this.date,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
 }

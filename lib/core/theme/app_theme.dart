@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:instakarm/features/home/domain/models/category.dart';
 
 class AppTheme {
   static const Color _primaryColor = Color(0xFF4F9DDE);
   static const Color _secondaryColor = Color(0xFFA76DFF);
   static const Color _backgroundColorLight = Color(0xFFF7F8FB);
   static const Color _errorColor = Color(0xFFF25F5C);
+
+  // Centralized Category Colors
+  static final Map<Category, Color> categoryColors = {
+    Category.grounding: const Color(0xFFE53935),
+    Category.creativity: const Color(0xFFFB8C00),
+    Category.confidence: const Color(0xFFFDD835),
+    Category.compassion: const Color(0xFF43A047),
+    Category.expression: const Color(0xFF1E88E5),
+    Category.intuition: const Color(0xFF5E35B1),
+    Category.awareness: const Color(0xFF8E24AA),
+  };
 
   static ThemeData get lightTheme {
     final baseTheme = ThemeData.from(
@@ -64,7 +76,7 @@ class AppTheme {
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withAlpha(26),
           blurRadius: 24,
           offset: const Offset(0, 4),
         ),

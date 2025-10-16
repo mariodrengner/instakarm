@@ -20,6 +20,7 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
       name: fields[0] as String,
       tasksPerDay: (fields[1] as num).toInt(),
       categoriesPerDay: (fields[2] as num).toInt(),
+      difficulty: fields[4] as String,
       karmaPoints: fields[3] == null ? 0 : (fields[3] as num).toInt(),
     );
   }
@@ -27,7 +28,7 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
   @override
   void write(BinaryWriter writer, UserProfile obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class UserProfileAdapter extends TypeAdapter<UserProfile> {
       ..writeByte(2)
       ..write(obj.categoriesPerDay)
       ..writeByte(3)
-      ..write(obj.karmaPoints);
+      ..write(obj.karmaPoints)
+      ..writeByte(4)
+      ..write(obj.difficulty);
   }
 
   @override

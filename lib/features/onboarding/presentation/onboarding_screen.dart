@@ -17,6 +17,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _currentPage = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     _nameController.dispose();
@@ -39,36 +44,33 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch the provider state for changes
     final viewModelState = ref.watch(onboardingViewModelProvider);
     final viewModelNotifier = ref.read(onboardingViewModelProvider.notifier);
 
-    // Update text controller if state changes from outside (e.g., random name generation)
-    if (_nameController.text != viewModelState.userName) {
-       _nameController.text = viewModelState.userName;
-    }
-
-    final isLastPage = _currentPage == 2;
-
     return Scaffold(
-      backgroundColor: const Color(0xFF0B0C10),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: _onPageChanged,
-                children: [
-                  _buildIntroPage(),
-                  _buildDifficultyPage(viewModelState, viewModelNotifier),
-                  _buildNamePage(viewModelState, viewModelNotifier),
-                ],
+      backgroundColor: const Color(0xFFF7E1D7),
+      body: viewModelState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(child: Text('Error: $error')),
+        data: (stateData) {
+          final isLastPage = _currentPage == 2;
+          return Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  children: [
+                    _buildIntroPage(),
+                    _buildDifficultyPage(stateData, viewModelNotifier),
+                    _buildNamePage(stateData, viewModelNotifier),
+                  ],
+                ),
               ),
-            ),
-            _buildBottomBar(viewModelState, isLastPage),
-          ],
-        ),
+              _buildBottomBar(stateData, isLastPage),
+            ],
+          );
+        },
       ),
     );
   }
@@ -91,22 +93,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             label: 'Einfach',
             tasks: 1,
             categories: 1,
-            isSelected: viewModelState.tasksPerDay == 1,
-            onTap: () => viewModelNotifier.setDifficulty(1, 1),
+            isSelected: viewModelState.difficulty == 'easy',
+            onTap: () => viewModelNotifier.setDifficulty('easy', 1, 1),
           ),
           _DifficultyButton(
             label: 'Mittel',
             tasks: 3,
             categories: 3,
-            isSelected: viewModelState.tasksPerDay == 3,
-            onTap: () => viewModelNotifier.setDifficulty(3, 3),
+            isSelected: viewModelState.difficulty == 'medium',
+            onTap: () => viewModelNotifier.setDifficulty('medium', 3, 3),
           ),
           _DifficultyButton(
             label: 'Schwer',
             tasks: 7,
             categories: 7,
-            isSelected: viewModelState.tasksPerDay == 7,
-            onTap: () => viewModelNotifier.setDifficulty(7, 7),
+            isSelected: viewModelState.difficulty == 'hard',
+            onTap: () => viewModelNotifier.setDifficulty('hard', 7, 7),
           ),
         ],
       ),
@@ -122,13 +124,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           TextField(
             controller: _nameController,
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(color: Colors.white, fontSize: 24),
+            style: GoogleFonts.inter(color: Colors.black87, fontSize: 24),
             decoration: InputDecoration(
               hintText: 'z.B. MutMacher3000',
-              hintStyle: GoogleFonts.inter(color: Colors.white.withOpacity(0.5)),
+              hintStyle: GoogleFonts.inter(color: Colors.black.withAlpha((255 * 0.5).round())),
               border: InputBorder.none,
               suffixIcon: IconButton(
-                icon: const Icon(Icons.refresh, color: Color(0xFF66FCF1)),
+                icon: const Icon(Icons.refresh, color: Color(0xFF45A29E)),
                 onPressed: () {
                   // Re-generates a random name
                   ref.read(onboardingViewModelProvider.notifier).regenerateRandomName();
@@ -177,7 +179,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               onPressed: _completeOnboarding,
               child: Text(
                 'Überspringen und gleich loslegen',
-                style: GoogleFonts.inter(color: Colors.white.withOpacity(0.6)),
+                style: GoogleFonts.inter(color: Colors.black.withAlpha(153)),
               ),
             ),
         ],
@@ -192,7 +194,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       height: 8,
       width: _currentPage == index ? 24 : 8,
       decoration: BoxDecoration(
-        color: _currentPage == index ? const Color(0xFF66FCF1) : Colors.white.withOpacity(0.3),
+        color: _currentPage == index ? const Color(0xFF45A29E) : Colors.black.withAlpha(50),
         borderRadius: BorderRadius.circular(4),
       ),
     );
@@ -221,13 +223,13 @@ class _OnboardingPageContent extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+            style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black87),
           ),
           const SizedBox(height: 16),
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(fontSize: 16, color: Colors.white.withOpacity(0.8), height: 1.5),
+            style: GoogleFonts.inter(fontSize: 16, color: Colors.black.withAlpha(204), height: 1.5),
           ),
           const SizedBox(height: 48),
           child,
@@ -263,10 +265,10 @@ class _DifficultyButton extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF45A29E) : Colors.white.withOpacity(0.1),
+          color: isSelected ? const Color(0xFF45A29E) : Colors.black.withAlpha(10),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? const Color(0xFF66FCF1) : Colors.transparent,
+            color: isSelected ? const Color(0xFF45A29E) : Colors.transparent,
             width: 2,
           ),
         ),
@@ -274,12 +276,16 @@ class _DifficultyButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: isSelected ? Colors.white : Colors.black87),
             ),
             const SizedBox(height: 4),
             Text(
               '$tasks Aufgabe${tasks > 1 ? 'n' : ''} in $categories Kategorie${categories > 1 ? 'n' : ''}',
-              style: GoogleFonts.inter(fontSize: 14, color: Colors.white.withOpacity(0.8)),
+              style: GoogleFonts.inter(
+                  fontSize: 14, color: isSelected ? Colors.white.withAlpha(204) : Colors.black.withAlpha(204)),
             ),
           ],
         ),
