@@ -27,16 +27,18 @@ class OnboardingViewModel extends _$OnboardingViewModel {
   @override
   Future<OnboardingState> build() async {
     _userProfileRepository = await ref.watch(userProfileRepositoryProvider.future);
+    return OnboardingState(userName: _generateRandomName());
+  }
 
-    // Generate an initial random name for the user.
+  /// Generates a random username.
+  String _generateRandomName() {
     const adjectives = ['Happy', 'Brave', 'Clever', 'Sunny', 'Lucky'];
     const nouns = ['Panda', 'Lion', 'Tiger', 'Eagle', 'Fox'];
-    final randomAdjective = adjectives[DateTime.now().millisecond % adjectives.length];
+    final randomAdjective =
+        adjectives[DateTime.now().millisecond % adjectives.length];
     final randomNoun = nouns[DateTime.now().millisecond % nouns.length];
     final randomNumber = DateTime.now().second;
-    final initialName = '$randomAdjective$randomNoun$randomNumber';
-
-    return OnboardingState(userName: initialName);
+    return '$randomAdjective$randomNoun$randomNumber';
   }
 
   /// Sets the difficulty level for the tasks.
@@ -61,12 +63,7 @@ class OnboardingViewModel extends _$OnboardingViewModel {
   void regenerateRandomName() {
     final currentState = state.value;
     if (currentState == null) return;
-    const adjectives = ['Happy', 'Brave', 'Clever', 'Sunny', 'Lucky'];
-    const nouns = ['Panda', 'Lion', 'Tiger', 'Eagle', 'Fox'];
-    final randomAdjective = adjectives[DateTime.now().millisecond % adjectives.length];
-    final randomNoun = nouns[DateTime.now().millisecond % nouns.length];
-    final randomNumber = DateTime.now().second;
-    state = AsyncData(currentState.copyWith(userName: '$randomAdjective$randomNoun$randomNumber'));
+    state = AsyncData(currentState.copyWith(userName: _generateRandomName()));
   }
 
   /// Completes the onboarding process by saving the user's profile.
@@ -92,7 +89,8 @@ class OnboardingViewModel extends _$OnboardingViewModel {
 
   /// Resets the onboarding status and clears all user data.
   Future<void> resetOnboarding() async {
-    final userProfileRepo = await ref.read(userProfileRepositoryProvider.future);
+    final userProfileRepo =
+        await ref.read(userProfileRepositoryProvider.future);
     final taskRepo = await ref.read(taskRepositoryProvider.future);
 
     await userProfileRepo.clearProfile();

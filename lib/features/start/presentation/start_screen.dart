@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:instakarm/core/theme/app_theme.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -8,7 +9,7 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7E1D7),
+      backgroundColor: AppTheme.scaffoldBackground,
       body: SafeArea(
         child: Center(
           child: Column(

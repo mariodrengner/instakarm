@@ -1,35 +1,41 @@
-# Instakarm ✨
+# InstaKarm ✨ – Kleine Taten, große Wirkung
 
-Eine moderne Achtsamkeits-App, die hilft, durch kleine, tägliche Aufgaben innere Balance zu finden.
+InstaKarm ist eine moderne mobile App, die darauf ausgelegt ist, durch kleine, tägliche Aufgaben positive Gewohnheiten zu fördern und das persönliche Wohlbefinden zu steigern. Sie bricht das große Ziel der Selbstverbesserung in winzige, machbare Schritte herunter und macht den Fortschritt durch das Sammeln von "Karma-Punkten" spielerisch sichtbar.
 
 ---
 
-## 🚀 Status
+## 🚀 Die User-Journey
 
-**In Planung.** Die Konzeptions- und Architekturphase ist abgeschlossen. Der nächste Schritt ist die Implementierung der Basis-Architektur und der ersten Features.
-
-## 🎯 Vision
-
-Instakarm ist ein digitaler Begleiter für den Alltag, der Achtsamkeit und persönliche Balance fördert – ohne spirituelle Überforderung. Die App bietet täglich sieben kleine, sinnvolle Aufgaben, die auf Prinzipien der Ausgeglichenheit basieren (subtil inspiriert von Chakra-Lehren), aber in einfacher, alltagstauglicher Sprache formuliert sind.
-
-Das Ziel ist eine ästhetische, ruhige und motivierende Nutzererfahrung, die auf sanfter Gamification und personalisierter Unterstützung basiert.
-
-**➡️ Mehr Details in der [Vision & Idee](./plan/idee.md).**
+1.  **Onboarding:** Ein schneller, unkomplizierter Einstieg, bei dem der Nutzer einen Namen wählt und den gewünschten Schwierigkeitsgrad festlegt.
+2.  **Tägliche Aufgaben:** Auf dem Homescreen werden die Aufgaben für den Tag angezeigt.
+3.  **Absolvieren & Sammeln:** Mit einem Klick wird eine Aufgabe als erledigt markiert, und der Karma-Punktestand erhöht sich.
+4.  **Wachsen:** Der Nutzer sieht seinen Fortschritt und baut kontinuierlich positive Gewohnheiten auf.
 
 ---
 
 ## 🛠️ Tech Stack & Architektur
 
-Das Projekt basiert auf einer sauberen, skalierbaren Architektur, um eine hohe Code-Qualität und Wartbarkeit zu gewährleisten.
+Um InstaKarm robust, wartbar und skalierbar zu machen, wurde eine moderne, an Clean Architecture angelehnte **Feature-First-Architektur** gewählt.
 
-- **Framework:** Flutter
-- **Architektur:** Feature-First Clean Architecture
-- **State Management:** BLoC
-- **Navigation:** `go_router`
-- **Dependency Injection:** `GetIt`
-- **Code-Generierung:** `build_runner` (für `freezed`, `json_serializable` etc.)
+- **Framework:** **Flutter** – Für eine plattformübergreifende Entwicklung auf iOS, Android und Web.
+- **State Management:** **Riverpod** – Für eine klare Trennung von UI und Geschäftslogik und sauberes Dependency Management.
+- **Routing:** **GoRouter** – Für eine deklarative, zustandsbasierte Navigation.
+- **Lokale Datenbank:** **Hive** – Eine extrem schnelle und leichtgewichtige NoSQL-Datenbank zur lokalen Speicherung von Nutzerprofilen und Aufgaben.
 
 **➡️ Mehr Details im [Architekturplan](./plan/architecture.md).**
+
+### Projektstruktur
+
+```
+lib/
+├── app_shell/      # App-Grundgerüst (Routing, Haupt-Widget)
+├── core/           # App-übergreifende Logik (Theme, Models, DI)
+├── features/       # Einzelne Features/Module der App
+│   ├── home/
+│   ├── onboarding/
+│   └── ...
+└── shared/         # Wiederverwendbare Widgets
+```
 
 ---
 
@@ -68,5 +74,3 @@ Das Projekt basiert auf einer sauberen, skalierbaren Architektur, um eine hohe C
 ## 📂 Projektstruktur & Planung
 
 Die gesamte Planung – von der Idee über das Design bis zur technischen Umsetzung – ist im Verzeichnis `/plan` dokumentiert. Der beste Einstiegspunkt ist die [PLAN.md](./plan/PLAN.md).
-
-Die detaillierte Verzeichnisstruktur ist hier visualisiert: **[Struktur-Dokument](./plan/struktur.md)**.
