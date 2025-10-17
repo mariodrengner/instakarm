@@ -13,7 +13,7 @@ Beschreibt die User-Journey, alle Screens und das visuelle Design-System (Farbpa
 - **➡️ Details in: [screens.md](./screens.md)**
 
 ### 3. Architektur & Technischer Plan
-Legt die Softwarearchitektur (Clean Architecture), die Projektstruktur, State Management (BLoC) und weitere technische Details fest.
+Legt die Softwarearchitektur (Clean Architecture), die Projektstruktur, State Management (Riverpod) und weitere technische Details fest.
 - **➡️ Details in: [architecture.md](./architecture.md)**
 
 ### 4. Detaillierte Projektstruktur
