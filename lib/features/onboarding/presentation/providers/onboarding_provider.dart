@@ -1,30 +1,34 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:instakarm/core/data/models/user_profile.dart';
-import 'package:instakarm/features/home/domain/repositories/i_task_repository.dart';
+
 import 'package:instakarm/features/home/presentation/providers/home_provider.dart';
 import 'package:instakarm/features/onboarding/domain/repositories/i_user_profile_repository.dart';
 
 part 'onboarding_provider.g.dart';
 
 /// Provider to asynchronously determine if onboarding has been completed.
+///
+/// This is used by the router to decide which screen to show when the app starts.
 final onboardingStateProvider = FutureProvider<bool>((ref) async {
   final repository = await ref.watch(userProfileRepositoryProvider.future);
   return repository.hasCompletedOnboarding();
 });
 
-// The Notifier class
+/// The view model for the onboarding process.
+///
+/// This notifier manages the state of the onboarding flow, including user selections
+/// for difficulty and username, and handles the logic for completing or resetting
+/// the onboarding process.
 @riverpod
 class OnboardingViewModel extends _$OnboardingViewModel {
   late IUserProfileRepository _userProfileRepository;
-  late ITaskRepository _taskRepository;
 
   @override
   Future<OnboardingState> build() async {
     _userProfileRepository = await ref.watch(userProfileRepositoryProvider.future);
-    _taskRepository = await ref.watch(taskRepositoryProvider.future);
 
-    // Generate an initial random name.
+    // Generate an initial random name for the user.
     const adjectives = ['Happy', 'Brave', 'Clever', 'Sunny', 'Lucky'];
     const nouns = ['Panda', 'Lion', 'Tiger', 'Eagle', 'Fox'];
     final randomAdjective = adjectives[DateTime.now().millisecond % adjectives.length];
@@ -32,10 +36,10 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     final randomNumber = DateTime.now().second;
     final initialName = '$randomAdjective$randomNoun$randomNumber';
 
-    // Initial state with a random name.
     return OnboardingState(userName: initialName);
   }
 
+  /// Sets the difficulty level for the tasks.
   void setDifficulty(String difficulty, int tasks, int categories) {
     final currentState = state.value;
     if (currentState == null) return;
@@ -46,12 +50,14 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     ));
   }
 
+  /// Updates the user's chosen name.
   void updateUserName(String name) {
     final currentState = state.value;
     if (currentState == null) return;
     state = AsyncData(currentState.copyWith(userName: name));
   }
 
+  /// Generates a new random name for the user.
   void regenerateRandomName() {
     final currentState = state.value;
     if (currentState == null) return;
@@ -63,14 +69,12 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     state = AsyncData(currentState.copyWith(userName: '$randomAdjective$randomNoun$randomNumber'));
   }
 
+  /// Completes the onboarding process by saving the user's profile.
   Future<void> completeOnboarding() async {
     final currentState = state.value;
     if (currentState == null) return;
 
     state = AsyncData(currentState.copyWith(isLoading: true));
-
-    // Use default values if the user skipped the steps
-    final defaultProfile = UserProfile.defaultProfile();
 
     final profile = UserProfile(
       name: currentState.userName,
@@ -80,31 +84,29 @@ class OnboardingViewModel extends _$OnboardingViewModel {
     );
     await _userProfileRepository.saveProfile(profile);
 
-    // Invalidate the provider to force a re-fetch of the onboarding status
+    // Invalidate the onboarding state to trigger navigation.
     ref.invalidate(onboardingStateProvider);
 
     state = AsyncData(currentState.copyWith(isLoading: false));
   }
 
+  /// Resets the onboarding status and clears all user data.
   Future<void> resetOnboarding() async {
-    // Fetch repositories directly to avoid dependency on the build method's initialization.
     final userProfileRepo = await ref.read(userProfileRepositoryProvider.future);
     final taskRepo = await ref.read(taskRepositoryProvider.future);
 
-    // Clear all user-related data.
     await userProfileRepo.clearProfile();
     await taskRepo.clearTasks();
 
-    // After async gaps, check if the provider is still mounted before using ref.
     if (!ref.mounted) return;
 
-    // Invalidate providers to trigger a full state refresh and navigation.
+    // Invalidate providers to refresh the app's state.
     ref.invalidate(onboardingStateProvider);
     ref.invalidate(homeProvider);
   }
 }
 
-// State class for the OnboardingViewModel
+/// Represents the state of the onboarding screen.
 class OnboardingState {
   final int tasksPerDay;
   final int categoriesPerDay;

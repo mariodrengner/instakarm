@@ -26,7 +26,7 @@ void main() {
       await Hive.openBox<DailyTaskLog>('daily_task_log_box');
 
       container = ProviderContainer();
-      userProfileRepository = container.read(userProfileRepositoryProvider);
+      userProfileRepository = await container.read(userProfileRepositoryProvider.future);
     });
 
     tearDown(() async {

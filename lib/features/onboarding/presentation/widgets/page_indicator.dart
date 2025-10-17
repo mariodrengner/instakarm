@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
+/// A widget that displays a series of dots to indicate the current page
+/// in a [PageView] or [TabController].
+///
+/// This indicator is visually connected to a [TabController] to reflect
+/// the current tab's index.
 class PageIndicator extends StatelessWidget {
+  /// The controller for the tab view, which this indicator represents.
+  final TabController tabController;
+
+  /// The index of the currently selected page.
+  final int currentPageIndex;
+
+  /// Creates a [PageIndicator].
   const PageIndicator({
     super.key,
     required this.tabController,
     required this.currentPageIndex,
-    // required this.onUpdateCurrentPageIndex,
   });
-
-  final int currentPageIndex;
-  final TabController tabController;
-  // final void Function(int) onUpdateCurrentPageIndex;
 
   @override
   Widget build(BuildContext context) {

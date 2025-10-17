@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:instakarm/core/data/models/daily_task_log.dart';
+import 'package:instakarm/core/theme/app_theme.dart';
 import 'package:instakarm/features/home/presentation/providers/home_provider.dart';
 import 'package:instakarm/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:instakarm/l10n/app_localizations.dart';
 import 'package:instakarm/shared/widgets/glass_card.dart';
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
-
-  String _getCategoryDisplayName(AppLocalizations l10n, String categoryKey) {
-    switch (categoryKey) {
+/// Extension to provide a localized display name for a category key.
+extension CategoryLocalization on String {
+  /// Returns the localized display name for a category key.
+  String toCategoryDisplayName(AppLocalizations l10n) {
+    switch (this) {
       case 'category_grounding':
         return l10n.category_grounding;
       case 'category_creativity':
@@ -27,19 +28,23 @@ class HomeScreen extends ConsumerWidget {
       case 'category_awareness':
         return l10n.category_awareness;
       default:
-        return categoryKey; // Fallback to key if not found
+        return this; // Fallback to key if not found
     }
   }
+}
+
+/// The main screen of the app, displaying the user's daily tasks.
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
 
   void _showTaskDetails(BuildContext context, WidgetRef ref, DailyTaskLog task) {
     final l10n = AppLocalizations.of(context)!;
-    // Temporarily display the key itself
-    final categoryDisplayName = _getCategoryDisplayName(l10n, task.categoryName);
+    final categoryDisplayName = task.categoryName.toCategoryDisplayName(l10n);
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: const Color(0xFFEDAFB8),
+      backgroundColor: AppTheme.modalBackground,
       builder: (context) => DraggableScrollableSheet(
         expand: false,
         initialChildSize: 0.4,
@@ -57,7 +62,7 @@ class HomeScreen extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () {
                   ref.read(homeProvider.notifier).completeTask(task.id);
-                  Navigator.pop(context); // Close the modal
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -86,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7E1D7),
+      backgroundColor: AppTheme.scaffoldBackground,
       body: homeAsyncState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Fehler: $err')),
@@ -97,7 +102,7 @@ class HomeScreen extends ConsumerWidget {
             slivers: [
               SliverAppBar(
                 title: Text('Hallo, ${state.userProfile.name}!'),
-                backgroundColor: const Color(0xFFF7E1D7),
+                backgroundColor: AppTheme.scaffoldBackground,
                 elevation: 0,
                 foregroundColor: Colors.black87,
                 actions: [
@@ -122,8 +127,7 @@ class HomeScreen extends ConsumerWidget {
                       );
                     }
                     final task = incompleteTasks[index];
-                    // Temporarily display the key itself
-                    final categoryDisplayName = _getCategoryDisplayName(l10n, task.categoryName);
+                    final categoryDisplayName = task.categoryName.toCategoryDisplayName(l10n);
                     final color = _colorFromHex(task.categoryColorHex);
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -147,21 +151,21 @@ class HomeScreen extends ConsumerWidget {
       floatingActionButton: homeAsyncState.when(
         data: (state) => state.tasks.where((t) => !t.isCompleted).isEmpty
             ? FloatingActionButton(
+                backgroundColor: Colors.white,
                 onPressed: () => ref.read(homeProvider.notifier).addMoreTasks(),
                 child: const Icon(Icons.add),
               )
             : const SizedBox.shrink(),
         loading: () => const SizedBox.shrink(),
-        error: (_, _) => const SizedBox.shrink(),
+        error: (_, __) => const SizedBox.shrink(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: homeAsyncState.when(
         data: (state) => KarmaBottomBar(
           karmaPoints: state.userProfile.karmaPoints,
-          tasksToday: state.userProfile.tasksPerDay,
         ),
         loading: () => const SizedBox.shrink(),
-        error: (_, _) => const SizedBox.shrink(),
+        error: (_, __) => const SizedBox.shrink(),
       ),
     );
   }
@@ -169,29 +173,27 @@ class HomeScreen extends ConsumerWidget {
 
 Color _colorFromHex(String hexColor) {
   final hexCode = hexColor.replaceAll('#', '');
-  // Handle potential parsing errors with a fallback color
   try {
-    // Use the hex code for full opacity
     return Color(int.parse('FF$hexCode', radix: 16));
   } catch (e) {
     return Colors.transparent;
   }
 }
 
+/// A bottom navigation bar that displays the user's karma points and level.
 class KarmaBottomBar extends StatelessWidget {
   final int karmaPoints;
-  final int tasksToday;
 
-  const KarmaBottomBar({super.key, required this.karmaPoints, required this.tasksToday});
+  const KarmaBottomBar({super.key, required this.karmaPoints});
 
   @override
   Widget build(BuildContext context) {
-    // Example: Level up every 10 points
     final currentLevel = (karmaPoints / 10).floor();
     final pointsInLevel = karmaPoints % 10;
     final progress = pointsInLevel / 10.0;
 
     return BottomAppBar(
+      color: _colorFromHex('#b0c4b1'),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -206,6 +208,9 @@ class KarmaBottomBar extends StatelessWidget {
             ),
           ),
           LinearProgressIndicator(
+            backgroundColor: _colorFromHex('#dedbd2'),
+            color: _colorFromHex('#4a5759'),
+
             value: progress,
             minHeight: 6,
           ),

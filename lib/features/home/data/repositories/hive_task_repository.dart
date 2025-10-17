@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+
 import 'package:flutter/services.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:instakarm/core/data/models/daily_task_log.dart';
@@ -13,12 +14,18 @@ import 'package:instakarm/features/home/domain/models/task_category.dart';
 import 'package:instakarm/core/theme/app_theme.dart';
 import 'package:uuid/uuid.dart';
 
+/// A Hive-based implementation of the [ITaskRepository].
+///
+/// This class uses the Hive database to persist daily tasks locally.
 class HiveTaskRepository implements ITaskRepository {
   static const _dailyTasksBoxName = 'daily_task_log_box';
   final Future<Box<DailyTaskLog>> _dailyTasksBoxFuture = Hive.openBox<DailyTaskLog>(_dailyTasksBoxName);
   final _uuid = const Uuid();
   final IUserProfileRepository _userProfileRepository;
 
+  /// Creates a new instance of [HiveTaskRepository].
+  ///
+  /// Requires an [IUserProfileRepository] to access user settings for task generation.
   HiveTaskRepository(this._userProfileRepository);
 
   Future<Box<DailyTaskLog>> _getTaskBox() async => _dailyTasksBoxFuture;
@@ -49,11 +56,12 @@ class HiveTaskRepository implements ITaskRepository {
       }
     } catch (e) {
       // Handle potential errors, e.g., issues with Hive box
-      print('Error in getOrGenerateDailyTasks: $e');
+      debugPrint('Error in getOrGenerateDailyTasks: $e');
       return [];
     }
   }
 
+  /// Generates a list of tasks for the day based on the user's profile.
   Future<List<DailyTaskLog>> _generateTasksForDay(UserProfile userProfile) async {
     final allCategories = await _loadSourceCategories();
     final random = Random();
@@ -91,14 +99,7 @@ class HiveTaskRepository implements ITaskRepository {
     final taskBox = await _getTaskBox();
     final task = taskBox.get(taskId);
     if (task != null) {
-      final updatedTask = DailyTaskLog(
-        id: task.id,
-        taskName: task.taskName,
-        categoryName: task.categoryName,
-        categoryColorHex: task.categoryColorHex,
-        date: task.date,
-        isCompleted: isCompleted,
-      );
+      final updatedTask = task.copyWith(isCompleted: isCompleted);
       await taskBox.put(taskId, updatedTask);
     }
   }
@@ -123,7 +124,7 @@ class HiveTaskRepository implements ITaskRepository {
     return newLog;
   }
 
-  // Helper to load the source JSON
+  /// Loads the source categories and tasks from the JSON asset file.
   Future<List<TaskCategory>> _loadSourceCategories() async {
     final String response = await rootBundle.loadString('assets/data/daily_tasks.json');
     final data = json.decode(response);

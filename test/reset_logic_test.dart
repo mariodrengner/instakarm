@@ -27,7 +27,7 @@ void main() {
       container = ProviderContainer();
 
       // Get the repository from the container
-      repository = container.read(userProfileRepositoryProvider);
+      repository = await container.read(userProfileRepositoryProvider.future);
     });
 
     tearDown(() async {

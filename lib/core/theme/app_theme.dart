@@ -8,6 +8,10 @@ class AppTheme {
   static const Color _backgroundColorLight = Color(0xFFF7F8FB);
   static const Color _errorColor = Color(0xFFF25F5C);
 
+  // Custom App Colors
+  static const Color scaffoldBackground = Color(0xFFF7E1D7);
+  static const Color modalBackground = Color(0xFFEDAFB8);
+
   // Centralized Category Colors
   static final Map<Category, Color> categoryColors = {
     Category.grounding: const Color(0xFFE53935),

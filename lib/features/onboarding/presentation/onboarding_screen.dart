@@ -44,6 +44,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<OnboardingState>>(onboardingViewModelProvider,
+        (previous, next) {
+      next.whenData((state) {
+        if (_nameController.text != state.userName) {
+          _nameController.text = state.userName;
+        }
+      });
+    });
+
     final viewModelState = ref.watch(onboardingViewModelProvider);
     final viewModelNotifier = ref.read(onboardingViewModelProvider.notifier);
 
