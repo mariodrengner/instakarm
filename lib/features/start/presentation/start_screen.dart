@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -7,57 +8,67 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text('Instant Karma'),
-      ),
-      extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          Image.asset('assets/images/bg/start.png'),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              child: Center(
-                child: Column(
-                  spacing: 16,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(flex: 3, child: Image.asset('assets/images/logo.png', width: 200, height: 200)),
-                    Expanded(flex: 2, child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 8,
-                      children: [
-                        const Text('Wir sind was wir tun', style: TextStyle(fontSize: 24)),
-                        const Text('Tausende Menschen verwenden Instant Karma auf ihrem Weg ein achtsameres Leben zu führen.', textAlign: TextAlign.center),
-                    ],
-                  )),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () => context.go('/onboarding'),
-                          child: const Text('Jetzt beginnen'),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Schon einen Account?'),
-                            TextButton(
-                              onPressed: null,
-                              child: const Text('Log In'),
-                            ),
-                          ],
-                        ),
-                      ],
+      backgroundColor: const Color(0xFFF7E1D7),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 24),
+              // App-Logo
+              Image.asset(
+                'assets/images/logo.png',
+                width: 120,
+                height: 120,
+              ),
+              const SizedBox(height: 24),
+              // Titel
+              Text(
+                'InstaKarm',
+                style: GoogleFonts.rubik(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Subheadline
+              Text(
+                'Level up your Mind',
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black.withAlpha(230),
+                ),
+              ),
+              const Spacer(),
+              // CTA-Button
+              Padding(
+                padding: const EdgeInsets.only(bottom: 64.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.go('/onboarding');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color(0xFF000000),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                    textStyle: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
                     ),
                   ),
-                ],
+                  child: const Text('Los geht\'s'),
+                ),
               ),
-            ),
+            ],
           ),
         ),
-      ]),
+      ),
     );
   }
 }

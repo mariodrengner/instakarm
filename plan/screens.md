@@ -5,6 +5,13 @@ Diese Übersicht beschreibt alle benötigten Screens für die App sowie ein empf
 
 ---
 
+## 📖 Detaillierte User Stories
+
+Für eine detaillierte Ausarbeitung der einzelnen Screens, inklusive User Stories und spezifischen Anforderungen, siehe die Dokumente im folgenden Verzeichnis:
+- **➡️ [Detaillierte Stories](./screens/)**
+
+---
+
 ## 🔹 Hauptnavigation / Struktur
 
 1. **Onboarding & Authentifizierung**
