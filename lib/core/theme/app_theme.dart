@@ -11,6 +11,10 @@ class AppTheme {
   // Custom App Colors
   static const Color scaffoldBackground = Color(0xFFF7E1D7);
   static const Color modalBackground = Color(0xFFEDAFB8);
+  static const Color primaryCta = Color(0xFF45A29E);
+  static const Color primaryCtaForeground = Colors.white;
+  static const Color dotInactive = Color(0x32000000); // Colors.black.withAlpha(50)
+  static const Color dotActive = Color(0xFF45A29E);
 
   // Centralized Category Colors
   static final Map<Category, Color> categoryColors = {

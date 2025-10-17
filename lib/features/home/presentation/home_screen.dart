@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:instakarm/core/data/models/daily_task_log.dart';
 import 'package:instakarm/core/theme/app_theme.dart';
+import 'package:instakarm/core/utils/extensions/color_extensions.dart';
 import 'package:instakarm/features/home/presentation/providers/home_provider.dart';
 import 'package:instakarm/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:instakarm/l10n/app_localizations.dart';
@@ -128,7 +129,7 @@ class HomeScreen extends ConsumerWidget {
                     }
                     final task = incompleteTasks[index];
                     final categoryDisplayName = task.categoryName.toCategoryDisplayName(l10n);
-                    final color = _colorFromHex(task.categoryColorHex);
+                    final color = task.categoryColorHex.toColor();
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                       child: GlassCard(
@@ -171,15 +172,6 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-Color _colorFromHex(String hexColor) {
-  final hexCode = hexColor.replaceAll('#', '');
-  try {
-    return Color(int.parse('FF$hexCode', radix: 16));
-  } catch (e) {
-    return Colors.transparent;
-  }
-}
-
 /// A bottom navigation bar that displays the user's karma points and level.
 class KarmaBottomBar extends StatelessWidget {
   final int karmaPoints;
@@ -193,7 +185,7 @@ class KarmaBottomBar extends StatelessWidget {
     final progress = pointsInLevel / 10.0;
 
     return BottomAppBar(
-      color: _colorFromHex('#b0c4b1'),
+      color: '#b0c4b1'.toColor(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -208,8 +200,8 @@ class KarmaBottomBar extends StatelessWidget {
             ),
           ),
           LinearProgressIndicator(
-            backgroundColor: _colorFromHex('#dedbd2'),
-            color: _colorFromHex('#4a5759'),
+            backgroundColor: '#dedbd2'.toColor(),
+            color: '#4a5759'.toColor(),
 
             value: progress,
             minHeight: 6,

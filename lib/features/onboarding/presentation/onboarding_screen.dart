@@ -1,3 +1,4 @@
+import 'package:instakarm/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +58,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final viewModelNotifier = ref.read(onboardingViewModelProvider.notifier);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7E1D7),
+      backgroundColor: AppTheme.scaffoldBackground,
       body: viewModelState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(child: Text('Error: $error')),
@@ -70,9 +71,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   controller: _pageController,
                   onPageChanged: _onPageChanged,
                   children: [
-                    _buildIntroPage(),
-                    _buildDifficultyPage(stateData, viewModelNotifier),
-                    _buildNamePage(stateData, viewModelNotifier),
+                    const _IntroPage(),
+                    _DifficultyPage(
+                      viewState: stateData,
+                      viewNotifier: viewModelNotifier,
+                    ),
+                    _NamePage(
+                      nameController: _nameController,
+                      viewNotifier: viewModelNotifier,
+                    ),
                   ],
                 ),
               ),
@@ -80,75 +87,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildIntroPage() {
-    return _OnboardingPageContent(
-      title: 'Willkommen bei InstaKarm',
-      subtitle: 'Jeden Tag kleine Aufgaben. Motivation, Spaß und Fortschritt in deinem Alltag.',
-      child: Image.asset('assets/images/onboarding/1.png', height: 250),
-    );
-  }
-
-  Widget _buildDifficultyPage(OnboardingState viewModelState, OnboardingViewModel viewModelNotifier) {
-    return _OnboardingPageContent(
-      title: 'Wie viel möchtest du dir vornehmen?',
-      subtitle: 'Passe die Herausforderung an deinen Alltag an.',
-      child: Column(
-        children: [
-          _DifficultyButton(
-            label: 'Einfach',
-            tasks: 1,
-            categories: 1,
-            isSelected: viewModelState.difficulty == 'easy',
-            onTap: () => viewModelNotifier.setDifficulty('easy', 1, 1),
-          ),
-          _DifficultyButton(
-            label: 'Mittel',
-            tasks: 3,
-            categories: 3,
-            isSelected: viewModelState.difficulty == 'medium',
-            onTap: () => viewModelNotifier.setDifficulty('medium', 3, 3),
-          ),
-          _DifficultyButton(
-            label: 'Schwer',
-            tasks: 7,
-            categories: 7,
-            isSelected: viewModelState.difficulty == 'hard',
-            onTap: () => viewModelNotifier.setDifficulty('hard', 7, 7),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNamePage(OnboardingState viewModelState, OnboardingViewModel viewModelNotifier) {
-    return _OnboardingPageContent(
-      title: 'Wie sollen wir dich nennen?',
-      subtitle: 'Du kannst den Namen jederzeit ändern.',
-      child: Column(
-        children: [
-          TextField(
-            controller: _nameController,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.inter(color: Colors.black87, fontSize: 24),
-            decoration: InputDecoration(
-              hintText: 'z.B. MutMacher3000',
-              hintStyle: GoogleFonts.inter(color: Colors.black.withAlpha((255 * 0.5).round())),
-              border: InputBorder.none,
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.refresh, color: Color(0xFF45A29E)),
-                onPressed: () {
-                  // Re-generates a random name
-                  ref.read(onboardingViewModelProvider.notifier).regenerateRandomName();
-                },
-              ),
-            ),
-            onChanged: viewModelNotifier.updateUserName,
-          ),
-        ],
       ),
     );
   }
@@ -173,8 +111,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF45A29E),
-                foregroundColor: Colors.white,
+                backgroundColor: AppTheme.primaryCta,
+                foregroundColor: AppTheme.primaryCtaForeground,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 textStyle: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w600),
               ),
@@ -203,10 +141,120 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       height: 8,
       width: _currentPage == index ? 24 : 8,
       decoration: BoxDecoration(
-        color: _currentPage == index ? const Color(0xFF45A29E) : Colors.black.withAlpha(50),
+        color: _currentPage == index ? AppTheme.dotActive : AppTheme.dotInactive,
         borderRadius: BorderRadius.circular(4),
       ),
     );
+  }
+}
+
+// Step 1: Intro Page
+class _IntroPage extends StatelessWidget {
+  const _IntroPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return const _OnboardingPageContent(
+      title: 'Willkommen bei InstaKarm',
+      subtitle:
+          'Jeden Tag kleine Aufgaben. Motivation, Spaß und Fortschritt in deinem Alltag.',
+      child: _OnboardingImage('assets/images/onboarding/1.png'),
+    );
+  }
+}
+
+// Step 2: Difficulty Page
+class _DifficultyPage extends StatelessWidget {
+  final OnboardingState viewState;
+  final OnboardingViewModel viewNotifier;
+
+  const _DifficultyPage({
+    required this.viewState,
+    required this.viewNotifier,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _OnboardingPageContent(
+      title: 'Wie viel möchtest du dir vornehmen?',
+      subtitle: 'Passe die Herausforderung an deinen Alltag an.',
+      child: Column(
+        children: [
+          _DifficultyButton(
+            label: 'Einfach',
+            tasks: 1,
+            categories: 1,
+            isSelected: viewState.difficulty == 'easy',
+            onTap: () => viewNotifier.setDifficulty('easy', 1, 1),
+          ),
+          _DifficultyButton(
+            label: 'Mittel',
+            tasks: 3,
+            categories: 3,
+            isSelected: viewState.difficulty == 'medium',
+            onTap: () => viewNotifier.setDifficulty('medium', 3, 3),
+          ),
+          _DifficultyButton(
+            label: 'Schwer',
+            tasks: 7,
+            categories: 7,
+            isSelected: viewState.difficulty == 'hard',
+            onTap: () => viewNotifier.setDifficulty('hard', 7, 7),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Step 3: Name Page
+class _NamePage extends StatelessWidget {
+  final TextEditingController nameController;
+  final OnboardingViewModel viewNotifier;
+
+  const _NamePage({
+    required this.nameController,
+    required this.viewNotifier,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _OnboardingPageContent(
+      title: 'Wie sollen wir dich nennen?',
+      subtitle: 'Du kannst den Namen jederzeit ändern.',
+      child: Column(
+        children: [
+          TextField(
+            controller: nameController,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(color: Colors.black87, fontSize: 24),
+            decoration: InputDecoration(
+              hintText: 'z.B. MutMacher3000',
+              hintStyle: GoogleFonts.inter(
+                  color: Colors.black.withAlpha((255 * 0.5).round())),
+              border: InputBorder.none,
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.refresh, color: AppTheme.primaryCta),
+                onPressed: viewNotifier.regenerateRandomName,
+              ),
+            ),
+            onChanged: viewNotifier.updateUserName,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Onboarding Image Widget
+class _OnboardingImage extends StatelessWidget {
+  final String assetPath;
+
+  const _OnboardingImage(this.assetPath);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(assetPath, height: 250);
   }
 }
 
@@ -274,10 +322,10 @@ class _DifficultyButton extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF45A29E) : Colors.black.withAlpha(10),
+          color: isSelected ? AppTheme.primaryCta : Colors.black.withAlpha(10),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? const Color(0xFF45A29E) : Colors.transparent,
+            color: isSelected ? AppTheme.primaryCta : Colors.transparent,
             width: 2,
           ),
         ),
